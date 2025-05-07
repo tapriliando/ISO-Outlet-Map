@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DKI Outlet Mapping</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+        .outlet-label {
+            font-size: 11px;
+            font-weight: bold;
+            text-shadow: 
+                -1px -1px 0 #fff,
+                1px -1px 0 #fff,
+                -1px 1px 0 #fff,
+                1px 1px 0 #fff;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2px 4px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([-6.2, 106.8], 10);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Outlet data
+        const outlets = [
+            { name: "Astra Isuzu Cileungsi", lat: -6.366774491006758, lng: 106.97489175531405, sales: 38, contrib: "5%" },
+            { name: "Astra Isuzu Harapan Indah", lat: -6.183116719102972, lng: 106.97450507675696, sales: 30, contrib: "4%" },
+            { name: "Astra Isuzu Sunter", lat: -6.141283683110816, lng: 106.88659352334253, sales: 52, contrib: "6%" },
+            { name: "Astra Isuzu Ciputat", lat: -6.312159609202352, lng: 106.75317069450958, sales: 76, contrib: "6%" },
+            { name: "Astra Isuzu Tangerang", lat: -6.193514768182946, lng: 106.58636452334326, sales: 19, contrib: "3%" },
+            { name: "Astra Isuzu Daan Mogot", lat: -6.154140142096784, lng: 106.73380859782009, sales: 44, contrib: "5%" },
+            { name: "Asco Isuzu Bekasi", lat: -6.252739898691267, lng: 107.03268268101476, sales: 59, contrib: "7%" },
+            { name: "Astrido Deltamas", lat: -6.37006051612584, lng: 107.17650922851729, sales: 31, contrib: "4%" },
+            { name: "Autotara Kalimalang", lat: -6.248075836737135, lng: 106.93104763460929, sales: 48, contrib: "11%" },
+            { name: "Karabha Pulogadung", lat: -6.179182497791622, lng: 106.90313975772065, sales: 64, contrib: "9%" },
+            { name: "Perros Kp. Bandan", lat: -6.133190873405117, lng: 106.81710351131271, sales: 4, contrib: "0%" },
+            { name: "Prima Cikarang", lat: -6.273260141564015, lng: 107.10340826752112, sales: 44, contrib: "5%" },
+            { name: "Tunas Daan Mogot", lat: -6.166416866559233, lng: 106.78583317591374, sales: 52, contrib: "7%" },
+            { name: "Astrido Serpong", lat: -6.2754596064227615, lng: 106.65792948101522, sales: 89, contrib: "11%" },
+            { name: "Autotara Parung", lat: -6.427677310942457, lng: 106.73214159783839, sales: 33, contrib: "4%" },
+            { name: "Zirang Depok", lat: -6.420959424354716, lng: 106.8578102098526, sales: 80, contrib: "10%" }
+        ];
+
+        // Function to get color based on sales volume
+        function getColor(sales) {
+            return sales > 70 ? '#005a32' :
+                   sales > 50 ? '#238b45' :
+                   sales > 30 ? '#41ab5d' :
+                   sales > 10 ? '#74c476' :
+                              '#a1d99b';
+        }
+
+        // Function to get radius based on sales volume
+        function getRadius(sales) {
+            return sales * 2;
+        }
+
+        // Add markers and labels for each outlet
+        outlets.forEach(outlet => {
+            // Add circle marker
+            L.circleMarker([outlet.lat, outlet.lng], {
+                radius: getRadius(outlet.sales),
+                fillColor: getColor(outlet.sales),
+                color: '#000',
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            })
+            .bindPopup(`<b>${outlet.name}</b><br>Sales Volume: ${outlet.sales}<br>Contribution: ${outlet.contrib}`)
+            .addTo(map);
+
+            // Add permanent label
+            L.marker([outlet.lat, outlet.lng], {
+                icon: L.divIcon({
+                    className: 'outlet-label',
+                    html: `${outlet.name}<br>Sales: ${outlet.sales} | Contrib: ${outlet.contrib}`,
+                    iconSize: [150, 40],
+                    iconAnchor: [75, 20]
+                })
+            }).addTo(map);
+        });
+
+        // Add legend
+        const legend = L.control({position: 'bottomright'});
+        legend.onAdd = function(map) {
+            const div = L.DomUtil.create('div', 'info legend');
+            const grades = [0, 10, 30, 50, 70];
+            const labels = [];
+
+            div.innerHTML += '<h4>Sales Volume</h4>';
+
+            for (let i = 0; i < grades.length; i++) {
+                div.innerHTML +=
+                    '<i style="background:' + getColor(grades[i] + 1) + '; width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.8; border-radius: 50%;"></i> ' +
+                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+            }
+
+            return div;
+        };
+        legend.addTo(map);
+    </script>
+</body>
+</html> 
