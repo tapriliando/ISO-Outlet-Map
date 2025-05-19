@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DKI Outlet Mapping</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
         #map {
             height: 100vh;
@@ -15,16 +16,39 @@
             padding: 0;
         }
         .info {
-            padding: 6px 8px;
+            padding: 10px 15px;
             font: 14px/16px Arial, Helvetica, sans-serif;
             background: white;
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.95);
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            border-radius: 5px;
+            border-radius: 8px;
+            min-width: 150px;
         }
         .info h4 {
-            margin: 0 0 5px;
-            color: #777;
+            margin: 0 0 10px;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #eee;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 4px 0;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid #000;
+        }
+        .legend-label {
+            font-size: 13px;
+            color: #555;
         }
         .outlet-label {
             font-size: 11px;
@@ -45,6 +69,11 @@
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        // Initialize Supabase client
+        const supabaseUrl = 'https://veecoqwjxnjxgbfymhmu.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZlZWNvcXdqeG5qeGdiZnltaG11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExNDcwODcsImV4cCI6MjA1NjcyMzA4N30.35XG4rT9F0pUQGcCjJkBnZLnx7MHJzf6FNLD6_LKofM'
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
         // Initialize the map
         const map = L.map('map').setView([-6.2, 106.8], 10);
 
@@ -54,83 +83,169 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Outlet data
-        const outlets = [
-            { name: "Astra Isuzu Cileungsi", lat: -6.366774491006758, lng: 106.97489175531405, sales: 38, contrib: "5%" },
-            { name: "Astra Isuzu Harapan Indah", lat: -6.183116719102972, lng: 106.97450507675696, sales: 30, contrib: "4%" },
-            { name: "Astra Isuzu Sunter", lat: -6.141283683110816, lng: 106.88659352334253, sales: 52, contrib: "6%" },
-            { name: "Astra Isuzu Ciputat", lat: -6.312159609202352, lng: 106.75317069450958, sales: 76, contrib: "6%" },
-            { name: "Astra Isuzu Tangerang", lat: -6.193514768182946, lng: 106.58636452334326, sales: 19, contrib: "3%" },
-            { name: "Astra Isuzu Daan Mogot", lat: -6.154140142096784, lng: 106.73380859782009, sales: 44, contrib: "5%" },
-            { name: "Asco Isuzu Bekasi", lat: -6.252739898691267, lng: 107.03268268101476, sales: 59, contrib: "7%" },
-            { name: "Astrido Deltamas", lat: -6.37006051612584, lng: 107.17650922851729, sales: 31, contrib: "4%" },
-            { name: "Autotara Kalimalang", lat: -6.248075836737135, lng: 106.93104763460929, sales: 48, contrib: "11%" },
-            { name: "Karabha Pulogadung", lat: -6.179182497791622, lng: 106.90313975772065, sales: 64, contrib: "9%" },
-            { name: "Perros Kp. Bandan", lat: -6.133190873405117, lng: 106.81710351131271, sales: 4, contrib: "0%" },
-            { name: "Prima Cikarang", lat: -6.273260141564015, lng: 107.10340826752112, sales: 44, contrib: "5%" },
-            { name: "Tunas Daan Mogot", lat: -6.166416866559233, lng: 106.78583317591374, sales: 52, contrib: "7%" },
-            { name: "Astrido Serpong", lat: -6.2754596064227615, lng: 106.65792948101522, sales: 89, contrib: "11%" },
-            { name: "Autotara Parung", lat: -6.427677310942457, lng: 106.73214159783839, sales: 33, contrib: "4%" },
-            { name: "Zirang Depok", lat: -6.420959424354716, lng: 106.8578102098526, sales: 80, contrib: "10%" }
-        ];
+        // Store markers and labels for each outlet
+        const outletMarkers = new Map();
 
-        // Function to get color based on sales volume
-        function getColor(sales) {
-            return sales > 70 ? '#005a32' :
-                   sales > 50 ? '#238b45' :
-                   sales > 30 ? '#41ab5d' :
-                   sales > 10 ? '#74c476' :
-                              '#a1d99b';
+        // Type configuration
+        const typeConfig = {
+            'Astra': {
+                color: '#377eb8', // Blue
+                zIndex: 3
+            },
+            'Dealer': {
+                color: '#e41a1c', // Red
+                zIndex: 2
+            },
+            'POS': {
+                color: '#ffff33', // Yellow
+                zIndex: 1
+            }
+        };
+
+        // Function to calculate radius in meters (2 kilometers)
+        function getRadius() {
+            return 4000; // 2 kilometers in meters
         }
 
-        // Function to get radius based on sales volume
-        function getRadius(sales) {
-            return sales * 2;
-        }
+        // Function to add or update outlet on the map
+        function addOrUpdateOutlet(outlet) {
+            // Remove existing markers if they exist
+            if (outletMarkers.has(outlet.id)) {
+                const existingMarkers = outletMarkers.get(outlet.id);
+                existingMarkers.circle.remove();
+                existingMarkers.label.remove();
+            }
 
-        // Add markers and labels for each outlet
-        outlets.forEach(outlet => {
-            // Add circle marker
-            L.circleMarker([outlet.lat, outlet.lng], {
-                radius: getRadius(outlet.sales),
-                fillColor: getColor(outlet.sales),
+            const config = typeConfig[outlet.type] || { color: '#999999', zIndex: 0 };
+
+            // Add circle marker with fixed radius
+            const circle = L.circle([outlet.lat, outlet.lng], {
+                radius: getRadius(),
+                fillColor: config.color,
                 color: '#000',
                 weight: 1,
                 opacity: 1,
-                fillOpacity: 0.8
+                fillOpacity: 0.8,
+                pane: 'markerPane' // Use markerPane for better z-index control
             })
-            .bindPopup(`<b>${outlet.name}</b><br>Sales Volume: ${outlet.sales}<br>Contribution: ${outlet.contrib}`)
+            .bindPopup(`<b>${outlet.name}</b><br>Type: ${outlet.type}<br>Sales Volume: ${outlet.sales}<br>Contribution: ${outlet.contrib}`)
             .addTo(map);
 
+            // Set z-index based on type
+            circle.setStyle({ zIndex: config.zIndex });
+
             // Add permanent label
-            L.marker([outlet.lat, outlet.lng], {
+            const label = L.marker([outlet.lat, outlet.lng], {
                 icon: L.divIcon({
                     className: 'outlet-label',
                     html: `${outlet.name}<br>Sales: ${outlet.sales} | Contrib: ${outlet.contrib}`,
                     iconSize: [150, 40],
                     iconAnchor: [75, 20]
-                })
+                }),
+                zIndexOffset: config.zIndex * 1000 // Ensure labels follow the same z-index order
             }).addTo(map);
-        });
+
+            // Store the markers
+            outletMarkers.set(outlet.id, { circle, label });
+        }
+
+        // Function to remove outlet from the map
+        function removeOutlet(outletId) {
+            if (outletMarkers.has(outletId)) {
+                const markers = outletMarkers.get(outletId);
+                markers.circle.remove();
+                markers.label.remove();
+                outletMarkers.delete(outletId);
+            }
+        }
 
         // Add legend
         const legend = L.control({position: 'bottomright'});
         legend.onAdd = function(map) {
             const div = L.DomUtil.create('div', 'info legend');
-            const grades = [0, 10, 30, 50, 70];
-            const labels = [];
+            div.innerHTML = '<h4>Outlet Types</h4>';
 
-            div.innerHTML += '<h4>Sales Volume</h4>';
+            // Create legend items
+            const types = [
+                { name: 'Astra', color: '#377eb8' },
+                { name: 'Dealer', color: '#e41a1c' },
+                { name: 'POS', color: '#ffff33' }
+            ];
 
-            for (let i = 0; i < grades.length; i++) {
-                div.innerHTML +=
-                    '<i style="background:' + getColor(grades[i] + 1) + '; width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.8; border-radius: 50%;"></i> ' +
-                    grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-            }
+            types.forEach(type => {
+                const item = L.DomUtil.create('div', 'legend-item', div);
+                const colorBox = L.DomUtil.create('div', 'legend-color', item);
+                colorBox.style.backgroundColor = type.color;
+                const label = L.DomUtil.create('span', 'legend-label', item);
+                label.textContent = type.name;
+            });
 
             return div;
         };
         legend.addTo(map);
+
+        // Initial fetch of outlets
+        async function fetchAndDisplayOutlets() {
+            try {
+                const { data: outlets, error } = await supabase
+                    .from('outlets')
+                    .select('*');
+
+                if (error) throw error;
+
+                // Clear existing markers
+                outletMarkers.forEach((markers) => {
+                    markers.circle.remove();
+                    markers.label.remove();
+                });
+                outletMarkers.clear();
+
+                // Sort outlets by type to ensure proper layering
+                const sortedOutlets = [...outlets].sort((a, b) => {
+                    const typeOrder = { 'POS': 1, 'Dealer': 2, 'Astra': 3 };
+                    return typeOrder[a.type] - typeOrder[b.type];
+                });
+
+                // Add each outlet to the map in sorted order
+                sortedOutlets.forEach(outlet => {
+                    addOrUpdateOutlet(outlet);
+                });
+            } catch (error) {
+                console.error('Error fetching outlets:', error.message);
+            }
+        }
+
+        // Set up real-time subscription
+        function setupRealtimeSubscription() {
+            const subscription = supabase
+                .channel('outlets_changes')
+                .on('postgres_changes', 
+                    { 
+                        event: '*', 
+                        schema: 'public', 
+                        table: 'outlets' 
+                    }, 
+                    (payload) => {
+                        console.log('Change received!', payload);
+                        
+                        switch (payload.eventType) {
+                            case 'INSERT':
+                            case 'UPDATE':
+                                // Remove and re-add all markers to maintain proper order
+                                fetchAndDisplayOutlets();
+                                break;
+                            case 'DELETE':
+                                removeOutlet(payload.old.id);
+                                break;
+                        }
+                    }
+                )
+                .subscribe();
+        }
+
+        // Initialize the map
+        fetchAndDisplayOutlets();
+        setupRealtimeSubscription();
     </script>
 </body>
 </html> 
