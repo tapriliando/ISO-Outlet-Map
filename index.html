@@ -90,21 +90,21 @@
         const typeConfig = {
             'Astra': {
                 color: '#377eb8', // Blue
-                zIndex: 3
+                zIndex: 1
             },
             'Dealer': {
                 color: '#e41a1c', // Red
-                zIndex: 2
+                zIndex: 3
             },
             'POS': {
                 color: '#ffff33', // Yellow
-                zIndex: 1
+                zIndex: 2
             }
         };
 
         // Function to calculate radius in meters (2 kilometers)
         function getRadius() {
-            return 4000; // 2 kilometers in meters
+            return 2000; // 2 kilometers in meters
         }
 
         // Function to add or update outlet on the map
@@ -202,7 +202,7 @@
 
                 // Sort outlets by type to ensure proper layering
                 const sortedOutlets = [...outlets].sort((a, b) => {
-                    const typeOrder = { 'POS': 1, 'Dealer': 2, 'Astra': 3 };
+                    const typeOrder = { 'POS': 3, 'Dealer': 2, 'Astra': 1 };
                     return typeOrder[a.type] - typeOrder[b.type];
                 });
 
