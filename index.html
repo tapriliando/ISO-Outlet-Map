@@ -51,7 +51,7 @@
             color: #555;
         }
         .outlet-label {
-            font-size: 11px;
+            font-size: 9px;
             font-weight: bold;
             text-shadow: 
                 -1px -1px 0 #fff,
@@ -59,8 +59,8 @@
                 -1px 1px 0 #fff,
                 1px 1px 0 #fff;
             background: rgba(255, 255, 255, 0.7);
-            padding: 2px 4px;
-            border-radius: 3px;
+            padding: 1px 3px;
+            border-radius: 2px;
             white-space: nowrap;
         }
     </style>
@@ -138,11 +138,11 @@
             const label = L.marker([outlet.lat, outlet.lng], {
                 icon: L.divIcon({
                     className: 'outlet-label',
-                    html: `${outlet.name}<br>Sales: ${outlet.sales} | Contrib: ${outlet.contrib}`,
-                    iconSize: [150, 40],
-                    iconAnchor: [75, 20]
+                    html: outlet.name,
+                    iconSize: [100, 20],
+                    iconAnchor: [50, 10]
                 }),
-                zIndexOffset: config.zIndex * 1000 // Ensure labels follow the same z-index order
+                zIndexOffset: config.zIndex * 1000
             }).addTo(map);
 
             // Store the markers
