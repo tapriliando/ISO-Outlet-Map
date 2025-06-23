@@ -116,6 +116,16 @@
             shadowSize: [41, 41]
         });
 
+        // Create custom red marker icon
+        const redIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
         // === MARKERS START ===
         L.marker([-0.07221665995798951, 109.36391512966416]).addTo(map).bindPopup(`
             <b>Alt 1</b><br>
@@ -124,6 +134,7 @@
 Tanah : 252 m2
 Bangunan : 486m2
 Ket : 3 Lantai</pre>
+<a href="https://maps.app.goo.gl/ME1Sd1BfXhTSMSuUA" target="_blank">Google Maps</a>
         `).bindTooltip('Alt 1', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.08701032952512443, 109.36946473170417]).addTo(map).bindPopup(`
@@ -133,6 +144,8 @@ Ket : 3 Lantai</pre>
 Tanah : -
 Bangunan : -
 Ket : 3 Lantai</pre>
+<a href="https://maps.app.goo.gl/Rjt1KEwCDhnTPAJ88" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 2', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.07272884562093689, 109.36392702245597]).addTo(map).bindPopup(`
@@ -142,6 +155,8 @@ Ket : 3 Lantai</pre>
 Tanah : 250m2
 Bangunan : 540m2
 Ket : 3 Lantai</pre>
+<a href="https://maps.app.goo.gl/1FAQpUjvARdon1zN6" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 3', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.11862872299666756, 109.3947164419778]).addTo(map).bindPopup(`
@@ -151,6 +166,8 @@ Ket : 3 Lantai</pre>
 Tanah : 155m2
 Bangunan : 160m2
 Ket : 3 Lantai</pre>
+<a href="https://maps.app.goo.gl/kxtVjjsFkKqM89Tk7" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 4', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.06424591350180463, 109.36863982920569]).addTo(map).bindPopup(`
@@ -160,6 +177,8 @@ Ket : 3 Lantai</pre>
 Tanah : 900m2
 Bangunan : 1800m2
 Ket : 3 Lantai</pre>
+<a href="https://maps.app.goo.gl/2Cia87aCoyNF79HJ6" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 5', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.033884744471632554, 109.34630861172738]).addTo(map).bindPopup(`
@@ -169,6 +188,8 @@ Ket : 3 Lantai</pre>
 Tanah : -
 Bangunan : -
 Ket : 2 Lantai</pre>
+<a href="https://maps.app.goo.gl/hi3G4hB7CnJo7qrd6" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 6', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.0399902756530726, 109.34727944989758]).addTo(map).bindPopup(`
@@ -178,6 +199,8 @@ Ket : 2 Lantai</pre>
 Tanah : 576 m2
 Bangunan : 972m2
 Ket : 3 Lantai</pre>
+<a href="https://maps.app.goo.gl/ukLQZEaEifz7yG2bA" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 7', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.014944122008717723, 109.36318976631361]).addTo(map).bindPopup(`
@@ -187,6 +210,8 @@ Ket : 3 Lantai</pre>
 Tanah : 
 Bangunan : 
 Ket : 2 Lantai</pre>
+<a href="https://maps.app.goo.gl/nF36WqWWunVTJaBy8" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 8', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.015302595609699378, 109.36209765045452]).addTo(map).bindPopup(`
@@ -196,6 +221,8 @@ Ket : 2 Lantai</pre>
 Tanah : 
 Bangunan : 
 Ket : 2 Lantai</pre>
+<a href="https://maps.app.goo.gl/w4ts6xhjkGPBXPFt7" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 9', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.025493869577442065, 109.36931628187571], {icon: greenIcon}).addTo(map).bindPopup(`
@@ -205,6 +232,8 @@ Ket : 2 Lantai</pre>
 Tanah : -  
 Bangunan : - 
 Ket : 2 Lantai</pre>
+<a href="https://maps.app.goo.gl/8iTz2XsP5DGXzJqf7" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 10', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.025940635389345088, 109.37717801617963]).addTo(map).bindPopup(`
@@ -214,6 +243,8 @@ Ket : 2 Lantai</pre>
 Tanah : 581m2
 Bangunan : 480m2
 Ket : 2 Lantai</pre>
+<a href="https://maps.app.goo.gl/8TCQ2kbG8iAfqEqPA" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 11', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.026699044659375858, 109.37972614954057]).addTo(map).bindPopup(`
@@ -223,6 +254,8 @@ Ket : 2 Lantai</pre>
 Tanah : 
 Bangunan : 
 Ket : 2 Lantai</pre>
+<a href="https://maps.app.goo.gl/dxJS3Nrj7Dz1foJ47" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 12', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.09348768994540307, 109.37571865964155], {icon: greenIcon}).addTo(map).bindPopup(`
@@ -232,6 +265,8 @@ Ket : 2 Lantai</pre>
 Tanah : 
 Bangunan : 
 Ket : 3 Lantai</pre>
+<a href="https://maps.app.goo.gl/Le4TN9ha9La1oxPK8" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 13', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.03986772722215488, 109.34841035210307], {icon: greenIcon}).addTo(map).bindPopup(`
@@ -241,6 +276,8 @@ Ket : 3 Lantai</pre>
 Tanah : 
 Bangunan : 
 Ket : 1 ruko 3 lantai dan 2 ruko 1 lantai</pre>
+<a href="https://maps.app.goo.gl/AnsR2SNrsrSneuQR8" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 14', {permanent: true, className: 'location-label', direction: 'top'});
 
         L.marker([-0.08102330945628582, 109.36788750690728], {icon: greenIcon}).addTo(map).bindPopup(`
@@ -250,7 +287,21 @@ Ket : 1 ruko 3 lantai dan 2 ruko 1 lantai</pre>
 Tanah : 210 m2
 Bangunan : 156 m2
 Ket : 1 ruko 1 lantai (gudang)</pre>
+<a href="https://maps.app.goo.gl/CaYM8oRcHFx52Uaq6" target="_blank">Google Maps</a>
+
         `).bindTooltip('Alt 15', {permanent: true, className: 'location-label', direction: 'top'});
+
+        L.marker([-0.05984498263968695, 109.38529444362013], {icon: redIcon}).addTo(map).bindPopup(`
+            <b>BAC</b><br>
+            <pre>-</pre>
+<a href="https://maps.app.goo.gl/eFSMKEnMh2GWNkE88" target="_blank">Google Maps</a>
+        `).bindTooltip('BAC', {permanent: true, className: 'location-label', direction: 'top'});
+
+        L.marker([-0.07416845857340514, 109.36484192143874], {icon: redIcon}).addTo(map).bindPopup(`
+            <b>POS BAC</b><br>
+            <pre>-</pre>
+<a href="https://maps.app.goo.gl/ULiGpwdJVwsnq6Nj6" target="_blank">Google Maps</a>
+        `).bindTooltip('POS BAC', {permanent: true, className: 'location-label', direction: 'top'});
 
         // === MARKERS END ===
 
@@ -433,8 +484,8 @@ Ket : 1 ruko 1 lantai (gudang)</pre>
                     if (!line.trim()) return; // Skip empty lines
                     
                     try {
-                        const [name, coordinate, imageUrl, desc] = line.split(';');
-                        console.log(`Processing POI ${index + 1}:`, { name, coordinate, imageUrl });
+                        const [name, coordinate, imageUrl, desc, gmaps] = line.split(';');
+                        console.log(`Processing POI ${index + 1}:`, { name, coordinate, imageUrl, gmaps });
                         
                         const [lat, lng] = coordinate.split(',').map(coord => parseFloat(coord.trim()));
                         if (isNaN(lat) || isNaN(lng)) {
@@ -449,6 +500,7 @@ Ket : 1 ruko 1 lantai (gudang)</pre>
                                 <b>${name}</b><br>
                                 <img src="${imageUrl}" alt="${name}" width="150"><br>
                                 <pre>${desc}</pre>
+                                <a href="${gmaps}" target="_blank">Google Maps</a>
                             `);
                         console.log(`Marker added for ${name} at [${lat}, ${lng}]`);
                     } catch (lineError) {
